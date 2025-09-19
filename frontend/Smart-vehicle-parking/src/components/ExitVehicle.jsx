@@ -15,9 +15,12 @@ const ExitVehicle = ({ onExit }) => {
     try {
       const response = await exitVehicle(licensePlate);
       setParkingRecord(response.data);
-      setMessage(`Amount due: $${response.data.amountDue.toFixed(2)}`);
+      setMessage({ type: 'info', text: `Amount due: $${response.data.amountDue.toFixed(2)}` });
     } catch (error) {
-      setMessage('Error finding vehicle: ' + (error.response?.data?.message || error.message));
+      setMessage({ 
+        type: 'error', 
+        text: 'Error finding vehicle: ' + (error.response?.data?.message || error.message) 
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -25,11 +28,11 @@ const ExitVehicle = ({ onExit }) => {
 
   const handlePayment = async (paymentMethod) => {
     setIsProcessing(true);
-    setMessage('Processing payment...');
+    setMessage({ type: 'info', text: 'Processing payment...' });
     
     try {
       await makePayment(parkingRecord.id, paymentMethod);
-      setMessage('Payment successful! Vehicle exited.');
+      setMessage({ type: 'success', text: 'Payment successful! Vehicle exited.' });
       setTimeout(() => {
         setLicensePlate('');
         setParkingRecord(null);
@@ -37,39 +40,38 @@ const ExitVehicle = ({ onExit }) => {
         setIsProcessing(false);
       }, 2000);
     } catch (error) {
-      setMessage('Error processing payment: ' + (error.response?.data?.message || error.message));
+      setMessage({ 
+        type: 'error', 
+        text: 'Error processing payment: ' + (error.response?.data?.message || error.message) 
+      });
       setIsProcessing(false);
     }
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div>
       <h2>Exit Vehicle</h2>
-      <form onSubmit={handleFindVehicle} style={{ marginBottom: '20px' }}>
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            License Plate:
-          </label>
+      <form onSubmit={handleFindVehicle}>
+        <div className="form-group">
+          <label>License Plate:</label>
           <input
             type="text"
             value={licensePlate}
             onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
             required
-            
-            disabled={isProcessing}
+            disabled={isProcessing || parkingRecord}
           />
         </div>
         <button 
           type="submit" 
-          disabled={isProcessing}
-          
+          disabled={isProcessing || parkingRecord}
         >
           {isProcessing ? 'Processing...' : 'Find Vehicle'}
         </button>
       </form>
       
       {parkingRecord && (
-        <div >
+        <div>
           <h3>Parking Details</h3>
           <p><strong>Vehicle:</strong> {parkingRecord.vehicle.licensePlate}</p>
           <p><strong>Slot:</strong> {parkingRecord.parkingSlot.slotNumber}</p>
@@ -78,20 +80,23 @@ const ExitVehicle = ({ onExit }) => {
           <p><strong>Amount Due:</strong> ${parkingRecord.amountDue.toFixed(2)}</p>
           
           <h4>Select Payment Method:</h4>
-          <div >
+          <div className="payment-buttons">
             <button 
+              className="payment-btn cash"
               onClick={() => handlePayment('CASH')}
               disabled={isProcessing}
             >
               Cash
             </button>
             <button 
+              className="payment-btn card"
               onClick={() => handlePayment('CARD')}
               disabled={isProcessing}
             >
               Card
             </button>
             <button 
+              className="payment-btn digital"
               onClick={() => handlePayment('DIGITAL_WALLET')}
               disabled={isProcessing}
             >
@@ -102,8 +107,8 @@ const ExitVehicle = ({ onExit }) => {
       )}
       
       {message && (
-        <div>
-          {message}
+        <div className={`message ${message.type}`}>
+          {message.text}
         </div>
       )}
     </div>

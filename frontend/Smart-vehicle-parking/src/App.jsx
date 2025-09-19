@@ -3,19 +3,15 @@ import ParkingSlots from './components/ParkingSlots';
 import ParkVehicle from './components/ParkVehicle';
 import ExitVehicle from './components/ExitVehicle';
 import ActiveParkings from './components/ActiveParkings';
-import { getAvailableSlots, getActiveParkings } from './services/api';
+import { getActiveParkings } from './services/api';
 import './App.css';
 
 function App() {
-  const [availableSlots, setAvailableSlots] = useState([]);
   const [activeParkings, setActiveParkings] = useState([]);
   const [activeTab, setActiveTab] = useState('slots');
 
   const refreshData = async () => {
     try {
-      const slotsResponse = await getAvailableSlots();
-      setAvailableSlots(slotsResponse.data);
-      
       const parkingsResponse = await getActiveParkings();
       setActiveParkings(parkingsResponse.data);
     } catch (error) {
@@ -43,7 +39,7 @@ function App() {
       </nav>
       
       <main>
-        {activeTab === 'slots' && <ParkingSlots slots={availableSlots} />}
+        {activeTab === 'slots' && <ParkingSlots />}
         {activeTab === 'park' && <ParkVehicle onPark={refreshData} />}
         {activeTab === 'exit' && <ExitVehicle onExit={refreshData} />}
         {activeTab === 'active' && <ActiveParkings parkings={activeParkings} />}
