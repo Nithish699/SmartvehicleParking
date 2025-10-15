@@ -1,0 +1,38 @@
+.app-footer {
+  width: 100%;
+  padding: 8px 12px; /* smaller padding */
+  border-top: 1px solid rgba(0,0,0,0.06);
+  background: transparent;
+  color: #6b7280; /* muted gray */
+  font-size: 0.85rem; /* smaller text */
+  font-weight: 400;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.footer-text { text-align: left; opacity: 0.9; }
+
+.footer-nav { display: flex; gap: 8px; }
+.footer-nav a {
+  color: #4b5563; /* subtle link color */
+  text-decoration: none;
+  padding: 4px 6px; /* smaller touch area */
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+.footer-nav a:hover { background: rgba(0,0,0,0.03); color: #111827; }
+
+.footer-github a { color: #374151; display: inline-flex; align-items: center; gap: 6px; padding: 2px; }
+.footer-github svg { display: block; }
+
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column; align-items: center; }
+  .footer-text { text-align: center; }
+}

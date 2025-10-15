@@ -3,6 +3,7 @@ import ParkingSlots from './components/ParkingSlots';
 import ParkVehicle from './components/ParkVehicle';
 import ExitVehicle from './components/ExitVehicle';
 import ActiveParkings from './components/ActiveParkings';
+import Footer from './components/Footer';
 import { getActiveParkings } from './services/api';
 import './App.css';
 
@@ -39,11 +40,12 @@ function App() {
       </nav>
       
       <main>
-        {activeTab === 'slots' && <ParkingSlots />}
-        {activeTab === 'park' && <ParkVehicle onPark={refreshData} />}
-        {activeTab === 'exit' && <ExitVehicle onExit={refreshData} />}
-        {activeTab === 'active' && <ActiveParkings parkings={activeParkings} />}
+        {activeTab === 'slots' && <section id="slots"><ParkingSlots /></section>}
+        {activeTab === 'park' && <section id="park"><ParkVehicle onPark={refreshData} /></section>}
+        {activeTab === 'exit' && <section id="exit"><ExitVehicle onExit={refreshData} /></section>}
+        {activeTab === 'active' && <section id="active"><ActiveParkings parkings={activeParkings} /></section>}
       </main>
+      <Footer onNavigate={setActiveTab} />
     </div>
   );
 }
