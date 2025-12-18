@@ -1,0 +1,92 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  position: relative;
+  margin-right: 12px;
+}
+
+.p-circle {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.p-letter {
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+}
+
+.car-icon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 20px;
+  transform: rotate(15deg);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-main {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2ecc71, #3498db);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: #7f8c8d;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Sizes */
+.logo-container.small {
+  transform: scale(0.8);
+}
+
+.logo-container.large {
+  transform: scale(1.2);
+}
+
+.logo-container.large .p-circle {
+  width: 50px;
+  height: 50px;
+}
+
+.logo-container.large .p-letter {
+  font-size: 30px;
+}
+
+.logo-container.large .car-icon {
+  font-size: 24px;
+}
+
+.logo-container.large .logo-main {
+  font-size: 32px;
+}
+
+.logo-container.large .logo-sub {
+  font-size: 12px;
+}

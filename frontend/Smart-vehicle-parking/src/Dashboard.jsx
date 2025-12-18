@@ -7,6 +7,8 @@ import ActiveParkings from './components/ActiveParkings';
 import Footer from './components/Footer';
 import { getActiveParkings } from './services/api';
 import './App.css';
+import Logo from './Logo';
+
 
 function Dashboard() {
   const [activeParkings, setActiveParkings] = useState([]);
@@ -30,17 +32,20 @@ function Dashboard() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <div className="header-content">
-          <h1>Smart Vehicle Parking System</h1>
-          <button 
-            className="back-to-home"
-            onClick={() => navigate('/')}
-          >
-            ← Back to Home
-          </button>
-        </div>
-      </header>
+
+<header className="App-header">
+  <div className="header-content">
+    <Logo onClick={() => navigate('/')} />
+    <div className="header-actions">
+      <button 
+        className="back-to-home"
+        onClick={() => navigate('/')}
+      >
+        ← Back to Home
+      </button>
+    </div>
+  </div>
+</header>
       
       <nav>
         <button 
