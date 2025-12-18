@@ -9,7 +9,7 @@ import './App.css';
 
 function App() {
   const [activeParkings, setActiveParkings] = useState([]);
-  const [activeTab, setActiveTab] = useState('slots');
+  const [activeTab, setActiveTab] = useState('park');
 
   const refreshData = async () => {
     try {
