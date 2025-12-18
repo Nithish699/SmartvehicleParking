@@ -10,7 +10,35 @@ body {
   background-color: #f5f7fa;
   color: #333;
 }
+/* Add to existing App.css */
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.back-to-home {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-to-home:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+nav button.active {
+  background: #4facfe;
+  color: white;
+}
 .App {
   min-height: 100vh;
   display: flex;
