@@ -13,6 +13,52 @@ const ParkVehicle = ({ onPark }) => {
   const [filter, setFilter] = useState('ALL');
   const [loadingSlots, setLoadingSlots] = useState(true);
 
+  // License plate validation and formatting function
+  const validateAndFormatLicensePlate = (input) => {
+    // Remove all non-alphanumeric characters
+    const cleaned = input.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+    
+    // Common Indian license plate patterns:
+    // 1. KA 01 AB 1234 (Old format)
+    // 2. KA01AB1234 (New format without spaces)
+    // 3. KA 01 AB 1234 (With spaces)
+    
+    // Validation regex for Indian license plates
+    const plateRegex = /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{4}$/;
+    
+    // Check if cleaned input matches the pattern
+    if (plateRegex.test(cleaned)) {
+      // Format with spaces: KA 01 AB 1234
+      const formatted = cleaned.replace(
+        /^([A-Z]{2})([0-9]{1,2})([A-Z]{1,2})([0-9]{4})$/,
+        '$1 $2 $3 $4'
+      );
+      return { isValid: true, formatted, raw: cleaned };
+    }
+    
+    return { isValid: false, formatted: input.toUpperCase(), raw: input.toUpperCase() };
+  };
+
+  // Handle license plate input change
+  const handleLicensePlateChange = (e) => {
+    const input = e.target.value;
+    const { isValid, formatted } = validateAndFormatLicensePlate(input);
+    
+    // Update state with formatted value
+    setLicensePlate(formatted);
+    
+    // Show validation message if needed
+    if (input.length > 0 && !isValid) {
+      setMessage({ 
+        type: 'warning', 
+        text: 'Enter valid license plate (e.g., KA01AB1234)' 
+      });
+    } else {
+      // Clear message if valid or empty
+      setMessage('');
+    }
+  };
+
   // Fetch available slots
   const fetchSlots = async (type = 'ALL') => {
     try {
@@ -61,7 +107,15 @@ const ParkVehicle = ({ onPark }) => {
     setMessage('');
     
     try {
-      await parkVehicle(licensePlate, vehicleType, slotNumber);
+      // Validate license plate before submission
+      const { isValid, raw } = validateAndFormatLicensePlate(licensePlate);
+      
+      if (!isValid) {
+        throw new Error('Please enter a valid license plate (e.g., KA01AB1234)');
+      }
+      
+      // Send the formatted license plate to the API
+      await parkVehicle(raw, vehicleType, slotNumber);
       setMessage({ type: 'success', text: 'Vehicle parked successfully!' });
       setLicensePlate('');
       setSlotNumber('');
@@ -70,7 +124,7 @@ const ParkVehicle = ({ onPark }) => {
     } catch (error) {
       setMessage({ 
         type: 'error', 
-        text: 'Error parking vehicle: ' + (error.response?.data?.message || error.message) 
+        text: error.message || 'Error parking vehicle: ' + (error.response?.data?.message || error.message) 
       });
     } finally {
       setIsProcessing(false);
@@ -90,11 +144,17 @@ const ParkVehicle = ({ onPark }) => {
               <input
                 type="text"
                 value={licensePlate}
-                onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
+                onChange={handleLicensePlateChange}
                 required
                 disabled={isProcessing}
-                placeholder="e.g., ABC123"
+                placeholder="e.g., KA01AB1234"
+                maxLength="13" // Maximum length with spaces: KA 01 AB 1234
+                pattern="[A-Z0-9\s]{8,13}"
+                title="Enter license plate (e.g., KA01AB1234 or KA 01 AB 1234)"
               />
+              <small className="help-text">
+                Enter without spaces (e.g., KA01AB1234) - spaces will be added automatically
+              </small>
             </div>
             <div className="form-group">
               <label>Vehicle Type:</label>
@@ -105,7 +165,7 @@ const ParkVehicle = ({ onPark }) => {
               >
                 <option value="CAR">Car</option>
                 <option value="MOTORCYCLE">Motorcycle</option>
-                <option value="TRUCK">Truck</option>
+                <option value="BICYCLE">Bicycle</option>
               </select>
             </div>
             <div className="form-group">
